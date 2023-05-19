@@ -284,7 +284,7 @@
   dependencies:
     "fill-range" "^7.0.1"
 
-"bson@^5.2.0":
+"bson@^5.2.0", "bson@^5.3.0":
   "integrity" "sha512-ukmCZMneMlaC5ebPHXIkP8YJzNl5DC41N5MAIvKDqLggdao342t4McltoJBQfQya/nHBWAcSsYRqlXPoQkTJag=="
   "resolved" "https://registry.npmjs.org/bson/-/bson-5.3.0.tgz"
   "version" "5.3.0"
