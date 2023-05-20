@@ -6,9 +6,8 @@
     "start": "cross-env NODE_ENV=production node ./server.js",
     "start:dev": "cross-env NODE_ENV=development nodemon ./server.js",
     "lint": "eslint **/*.js",
-    "lint:fix": "eslint --fix **/*.js",
-    "build": "babel src -d lib",
-    "test": "jest"
+    "lint:fix": "eslint --fix **/*.js"
+   
   },
   "dependencies": {
     "bson": "^5.3.0",
@@ -29,8 +28,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "5.2.0",
     "nodemon": "2.0.15"
-  },
-  "engines": {
-    "node": ">=14 <15"
   }
+ 
 }
+
+
+
