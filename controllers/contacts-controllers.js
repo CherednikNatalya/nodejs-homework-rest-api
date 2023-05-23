@@ -1,18 +1,18 @@
-const contacts =require('../models/contact');
+const Contact =require('../models/contact');
 
 const {HttpError} = require('../helpers');
 
 const {ctrlWrapper} =require('../decorators')
 
 const getContactsController = async (req, res) => {
-    const result = await contacts.listContacts();
+    const result = await Contact.find();
     res.json(result);
 }
 
 
 const getContactDataByIdController= async (req, res) => {
      const {id} =req.params;
-     const result =await contacts.getContactById(id)
+     const result =await Contact.findById(id)
      if(!result) { 
      throw HttpError (404, 'Not Found');
      }
@@ -22,15 +22,14 @@ const getContactDataByIdController= async (req, res) => {
 
 const addNewContactController = async (req, res) => { 
   
-      const result = await contacts.addContact(req.body);
+      const result = await Contact.create(req.body);
       res.status(201).json(result);
 }
 
 
 const deleteContactByIdController = async (req, res) => {
-   
       const {id} =req.params;
-      const result = await contacts.removeContact(id);
+      const result = await Contact.findByIdAndRemove(id);
       if(!result) { 
         throw HttpError (404, 'Not Found');
         }
@@ -41,11 +40,20 @@ const deleteContactByIdController = async (req, res) => {
 
 const updateContactByIdController= async (req, res) => {
           const {id} = req.params;
-          const result =await contacts.updateById(id, req.body);
+          const result =await Contact.findOneAndUpdate(id, req.body, {new: true});
           if(!result){
             throw HttpError(400, 'Not found')
           }
           res.json(result);     
+}
+
+const updateStatusContactController = async (req, res) => {
+  const {id} = req.params;
+  const result =await Contact.findOneAndUpdate(id, req.body, {new: true});
+  if(!result){
+    throw HttpError(400, 'Not found')
+  }
+  res.json(result);     
 }
 
 
@@ -55,7 +63,8 @@ module.exports = {
     addNewContactController: ctrlWrapper(addNewContactController),
     deleteContactByIdController: ctrlWrapper(deleteContactByIdController),
     updateContactByIdController: ctrlWrapper(updateContactByIdController),
-    // updateStatusContactController,
+    updateStatusContactController: ctrlWrapper(updateStatusContactController),
+  
 }
 
 

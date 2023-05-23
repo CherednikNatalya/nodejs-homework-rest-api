@@ -2,27 +2,25 @@ const {Schema, model} = require('mongoose');
 
 const Joi = require('joi');
 
-const {handleMongooseError} = require('../helpers/handleMongooseError')
+const {handleMongooseError} = require('../helpers')
 
 // схема- вимоги до обєктів
-const contactSchema = new Schema( {
-    name: {
-      type: String,
-      required: [true, 'Set name for contact'],
-    },
-    email: {
-      type: String,
-      required: [true, 'Set email for contact'],
-    },
-    phone: {
-      type: String,
-      required: [true, 'Set phone for contact'],
-    },
-    favorite: {
-      type: Boolean,
-      default: false,
-    },
-  })
+const contactSchema = new Schema(  {
+  name: {
+    type: String,
+    required: [true, 'Set name for contact'],
+  },
+  email: {
+    type: String,
+  },
+  phone: {
+    type: String,
+  },
+  favorite: {
+    type: Boolean,
+    default: false,
+  },
+})
 
   contactSchema.post("save", handleMongooseError);
 
@@ -43,9 +41,18 @@ const contactSchema = new Schema( {
               /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/
               )
         .required(),
+        
         favorite: Joi.boolean()
   })
+
+  const updateFavoriteSchema =Joi.object({
+    favorite: Joi.boolean().require,
+  })
   
+const schemas ={
+  schema,
+  updateFavoriteSchema,
+}
 
 // модель- клас, який буде працювати з колекцією
 const Contact = model('contact', contactSchema);
@@ -53,7 +60,7 @@ const Contact = model('contact', contactSchema);
 
 module.exports = {
   Contact,
-  schema, 
+  schemas, 
 };
 
 
