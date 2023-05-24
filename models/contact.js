@@ -1,31 +1,31 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require("mongoose");
+const Joi = require("joi");
+const { handleMongooseError } = require("../helpers");
 
-const Joi = require('joi');
-
-const {handleMongooseError} = require('../helpers')
-
-// схема- вимоги до обєктів
-const contactSchema = new Schema(  {
-  name: {
-    type: String,
-    required: [true, 'Set name for contact'],
+const contactSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Set name for contact"],
+    },
+    email: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+    favorite: {
+      type: Boolean,
+      default: false,
+    },
   },
-  email: {
-    type: String,
-  },
-  phone: {
-    type: String,
-  },
-  favorite: {
-    type: Boolean,
-    default: false,
-  },
-})
+  { versionKey: false }
+);
 
-  contactSchema.post("save", handleMongooseError);
+contactSchema.post("save", handleMongooseError);
 
-  const schema =Joi.object({
-    name: Joi.string()
+const userSchema = Joi.object({
+  name: Joi.string()
          .alphanum()
          .min(3)
          .max(30)
@@ -41,28 +41,25 @@ const contactSchema = new Schema(  {
               /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/
               )
         .required(),
-        
-        favorite: Joi.boolean()
-  })
 
-  const updateFavoriteSchema =Joi.object({
-    favorite: Joi.boolean().require,
-  })
-  
-const schemas ={
-  schema,
+        favorite: Joi.boolean(),
+});
+
+const updateFavoriteSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
+const schemas = {
+  userSchema,
   updateFavoriteSchema,
-}
+};
 
-// модель- клас, який буде працювати з колекцією
-const Contact = model('contact', contactSchema);
-
+const Contact = model("contact", contactSchema);
 
 module.exports = {
   Contact,
-  schemas, 
+  schemas,
 };
-
 
 
 
