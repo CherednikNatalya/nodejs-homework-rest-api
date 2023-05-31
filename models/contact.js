@@ -18,8 +18,13 @@ const contactSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: true,
+    },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
 contactSchema.post("save", handleMongooseError);
@@ -43,6 +48,7 @@ const userSchema = Joi.object({
         .required(),
 
         favorite: Joi.boolean(),
+    
 });
 
 const updateFavoriteSchema = Joi.object({
