@@ -3,12 +3,21 @@ const jwt = require('jsonwebtoken');
 const gravatar =require('gravatar');
 const path = require('path');
 const fs = require('fs').promises;
-
+// const Jimp = require("jimp");
 
 const {User, subscriptionList} = require('../models/user');
 const { HttpError, ctrlWrapper } = require("../helpers");
 
+const {SECRET_KEY} = process.env;
+
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+
+// const updateImgAvatar = async (path) => {
+//   const avatar = await Jimp.read(path);
+//   avatar.resize(250, 250);
+//   await avatar.writeAsync(path);
+// };
+
 
 const register = async (req, res) => {
 const {email, password} =req.body;
@@ -40,8 +49,6 @@ const login = async(req, res) =>{
         throw  HttpError(401, 'Email or password invalid');
     }
     
-    const {SECRET_KEY} = process.env;
-
   const payload = {
     id: user._id,
   }
@@ -55,10 +62,10 @@ await User.findByIdAndUpdate(user._id, {token});
 }
 
 const getCurrent =async(req, res) =>{
-    const {email, name} =req.user;
+    const {email, subscription } =req.user;
     res.json ({
-        email,
-        name,
+      email, 
+      subscription 
     })
 }
 
@@ -75,8 +82,10 @@ const updateAvatar = async(req, res)=> {
   const {_id} = req.user;
   const {path: tempUpload, originalname} = req.file;
   const filename = `${_id}_${originalname}`;
+  
   const resultUpload = path.join(avatarsDir, filename);
   await fs.rename(tempUpload, resultUpload);
+
   const avatarURL = path.join("avatars", filename);
   await User.findByIdAndUpdate(_id, {avatarURL});
 
@@ -84,6 +93,7 @@ const updateAvatar = async(req, res)=> {
       avatarURL,
   })
 }
+
 
 const updateSubscription = async (req, res) => {
     const errorSubscription = new HttpError(400, "Invalid subscription value");
